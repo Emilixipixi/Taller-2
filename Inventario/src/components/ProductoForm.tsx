@@ -19,6 +19,7 @@ function ProductoForm({ productosEditar, onTerminar }: Props) {
   const [nombre, setNombre] = useState(productosEditar?.nombre ?? '')
   const [cantidad, setCantidad] = useState(productosEditar?.cantidad ?? 0)
   const [precio, setPrecio] = useState(productosEditar?.precio ?? 0.0)
+  const [categoria, setCategoria] = useState(productosEditar?.categoria ?? '')
   const [guardando, setGuardando] = useState(false)
 
   const editando = productosEditar !== null
@@ -27,6 +28,7 @@ function ProductoForm({ productosEditar, onTerminar }: Props) {
     setNombre('')
     setCantidad(0)
     setPrecio(0.0)
+    setCategoria('')
   }
 
   const guardarProductoTecnologico = async (e: FormEvent<HTMLFormElement>) => {
@@ -45,19 +47,19 @@ function ProductoForm({ productosEditar, onTerminar }: Props) {
     setGuardando(true)
     try {
       if (editando) {
-        await actualizarProducto(productosEditar.id!, nombreLimpio, cantidad, precio)
+        await actualizarProducto(productosEditar.id!, nombreLimpio, cantidad, precio,categoria)
         notificar({
           tipo: 'editado',
           titulo: 'Producto actualizado',
-          mensaje: `"${nombreLimpio}" se guardó con los nuevos datos.`,
+          mensaje: `"${nombreLimpio}" se guardó con los nuevos datos.`
         })
         onTerminar()
       } else {
-        await guardarProducto(nombreLimpio, cantidad, precio)
+        await guardarProducto(nombreLimpio, cantidad, precio,categoria)
         notificar({
           tipo: 'exito',
           titulo: 'Producto agregado',
-          mensaje: `"${nombreLimpio}" ya forma parte del inventario.`,
+          mensaje: `"${nombreLimpio}" ya forma parte del inventario.`
         })
         limpiar()
       }
@@ -119,6 +121,19 @@ function ProductoForm({ productosEditar, onTerminar }: Props) {
               />
             </div>
           </div>
+        </div>
+
+        <div className="field">
+          <label htmlFor="categoria">Categoría</label>
+          <input
+            type="text"
+            id="categoria"
+            name="categoria"
+            placeholder="Ej. Periféricos"
+            value={categoria}
+            onChange={(e) => setCategoria(e.target.value)}
+            autoComplete="off"
+          />
         </div>
 
         <div className="form__actions">

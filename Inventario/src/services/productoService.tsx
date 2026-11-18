@@ -1,4 +1,4 @@
-import { addDoc, collection, doc, getDocs, updateDoc, deleteDoc, onSnapshot } from 'firebase/firestore'
+import { addDoc, collection, doc, updateDoc, deleteDoc, onSnapshot } from 'firebase/firestore'
 import { db } from '../firebase';
 
 export interface Producto {
@@ -6,24 +6,16 @@ export interface Producto {
   nombre: string;
   cantidad: number;
   precio: number;
+  categoria?: string; // opcional: los productos creados antes no tienen este campo
 }
 
 const productosRef = collection(db, 'productos');
 
-export async function guardarProducto(nombre: string, cantidad: number, precio: number) {
+export async function guardarProducto(nombre: string, cantidad: number, precio: number, categoria: string) {
   // Dejamos que el error suba para que el formulario pueda mostrar la notificación de error
-  const docRef = await addDoc(productosRef, { nombre, cantidad, precio });
+  const docRef = await addDoc(productosRef, { nombre, cantidad, precio, categoria });
   console.log('Producto guardado con ID:', docRef.id);
   return docRef.id;
-}
-
-export const obtenerProductos = async (): Promise<Producto[]> => {
-  const querySnapshot = await getDocs(productosRef);
-
-  return querySnapshot.docs.map((d) => ({
-    id: d.id,
-    ...d.data()
-  })) as Producto[];
 }
 
 /**
@@ -48,9 +40,9 @@ export const escucharProductos = (
   );
 }
 
-export const actualizarProducto = async (id: string, nombre: string, cantidad: number, precio: number) => {
+export const actualizarProducto = async (id: string, nombre: string, cantidad: number, precio: number, categoria: string) => {
   const productoRef = doc(db, 'productos', id);
-  await updateDoc(productoRef, { nombre, cantidad, precio });
+  await updateDoc(productoRef, { nombre, cantidad, precio, categoria });
 }
 
 export const eliminarProducto = async (id: string) => {

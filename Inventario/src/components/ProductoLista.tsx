@@ -23,6 +23,7 @@ export const ProductoLista = ({ onEditar, editandoId }: Props) => {
     const [porEliminar, setPorEliminar] = useState<Producto | null>(null);
     const [eliminando, setEliminando] = useState(false);
 
+
     // Suscripción en tiempo real: la lista se actualiza sola al agregar, editar o eliminar
     useEffect(() => {
         const dejarDeEscuchar = escucharProductos(
@@ -127,6 +128,11 @@ export const ProductoLista = ({ onEditar, editandoId }: Props) => {
                                     <div>
                                         <span>Cantidad</span>
                                         <strong>{producto.cantidad}</strong>
+                                    </div>
+
+                                    <div>
+                                        <span>Categoría</span>
+                                        <strong>{producto.categoria || 'Sin categoría'}</strong>
                                     </div>
                                 </div>
 
